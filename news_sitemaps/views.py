@@ -1,3 +1,4 @@
+import django
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
@@ -52,9 +53,14 @@ def news_sitemap(request, sitemaps, section=None):
         except PageNotAnInteger:
             raise Http404('No page "%s"' % page)
 
+    render_kwargs = {}
+    if django.VERSION < (1, 5):
+        render_kwargs['mimetype'] = 'application/xml'
+    else:
+        render_kwargs['content_type'] = 'application/xml'
     return render_to_response('sitemaps/news_sitemap.xml', {
         'urlset': urls,
         'publication_name': NAME,
         'publication_lang': LANG,
         'publication_tz': TZ
-    }, content_type='application/xml')
+    }, **render_kwargs)
