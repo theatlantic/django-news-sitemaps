@@ -1,6 +1,10 @@
 Django News Sitemaps
 =====================
 
+.. image:: https://travis-ci.org/theatlantic/django-news-sitemaps.svg?branch=master
+    :target: https://travis-ci.org/theatlantic/django-news-sitemaps
+
+
 This is an implementation of sitemaps with news specific tags as defined by `Google's News Sitemaps <http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=74288>`_ specification.
 It is just regular Django sitemaps with a couple other tags added in specifically for news publications.
 
@@ -10,7 +14,6 @@ Install
 For starters, just place ``news_sitemaps`` into your ``INSTALLED_APPS`` and then you can load the default urlconf like so::
 
     urlpatterns = patterns('',
-        (r'^admin/', include(admin.site.urls)),
         ...
         (r'^news-sitemaps/', include('news_sitemaps.urls')),
     )
@@ -49,26 +52,26 @@ Adding Sitemaps
 ----------------
 
 To add your own news sitemaps you must register them with the app first.
-Here is a quick and dirty example of creating a news sitemap for Django's Comments::
+Here is a quick and dirty example of creating a news sitemap for a misc Model::
 
     from news_sitemaps import register, NewsSitemap
-    from django.contrib.comments.models import Comment
-    
-    class CommentSitemap(NewsSitemap):
+    from myapp.models import MyModel
+
+    class MyModelSitemap(NewsSitemap):
         limit = 5000
         def items(self):
-            return Comment.objects.filter(is_public=True,is_removed=False)
-            
+            return MyModel.objects.filter(is_public=True,is_removed=False)
+
         def lastmod(self, obj):
-            return obj.submit_date
-        
+            return obj.mod_date
+
         def genres(self, obj):
             return 'UserGenerated, Opinion'
-            
-    register(comments=CommentSitemap)
-    
-Then the comments sitemap will appear on your index sitemap and you will be able to access
-the actual sitemap at /news-sitemaps/comments.xml.
+
+    register(myapp=MyModelSitemap)
+
+Then the myapp sitemap will appear on your index sitemap and you will be able to access
+the actual sitemap at /news-sitemaps/myapp.xml.
 
 Notice the ``genres`` method. There are a few new methods in addition to the normal Sitemap methods which are news specific.
 They are: ``title``, ``access``, ``keywords``, ``stock_tickers``, and ``genres``.

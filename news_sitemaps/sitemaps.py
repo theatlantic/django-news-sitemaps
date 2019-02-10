@@ -17,9 +17,12 @@ class NewsSitemap(Sitemap):
             * PressRelease (default, visible): an official press release.
             * Satire (visible): an article which ridicules its subject for didactic purposes.
             * Blog (visible): any article published on a blog, or in a blog format.
-            * OpEd: an opinion-based article which comes specifically from the Op-Ed section of your site.
-            * Opinion: any other opinion-based article not appearing on an Op-Ed page, i.e., reviews, interviews, etc.
-            * UserGenerated: newsworthy user-generated content which has already gone through a formal editorial review process on your site.
+            * OpEd: an opinion-based article which comes specifically from the Op-Ed
+              section of your site.
+            * Opinion: any other opinion-based article not appearing on an Op-Ed page,
+              i.e., reviews, interviews, etc.
+            * UserGenerated: newsworthy user-generated content which has already gone
+              through a formal editorial review process on your site.
         """
         return 'PressRelease'
 
@@ -38,7 +41,7 @@ class NewsSitemap(Sitemap):
     def keywords(self, obj):
         """
         Returns a comma-separated list of keywords describing the topic of the article.
-        Keywords may be drawn from, but are not limited to, the list of existing Google News keywords.
+        Keywords may be drawn from, but not limited to, the list of existing Google News keywords.
         """
         if hasattr(obj, 'keywords'):
             return obj.keywords
@@ -54,7 +57,8 @@ class NewsSitemap(Sitemap):
         Options are::
 
             * Subscription (visible): an article which prompts users to pay to view content.
-            * Registration (visible): an article which prompts users to sign up for an unpaid account to view content.
+            * Registration (visible): an article which prompts users to sign up
+              for an unpaid account to view content.
         """
 
     def stock_tickers(self, obj):

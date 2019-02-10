@@ -1,13 +1,13 @@
 import django
 from django.http import HttpResponse, Http404
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.contrib.sites.models import Site
-from django.core import urlresolvers
+from django.urls import reverse
 from django.template import loader
 from django.utils.encoding import smart_str
 from django.core.paginator import EmptyPage, PageNotAnInteger
 
-from settings import LANG, NAME, TZ
+from .settings import LANG, NAME, TZ
 
 
 def index(request, sitemaps):
@@ -22,10 +22,10 @@ def index(request, sitemaps):
             pages = site().paginator.num_pages
         else:
             pages = site.paginator.num_pages
-        sitemap_url = urlresolvers.reverse('news_sitemaps_sitemap', kwargs={'section': section})
+        sitemap_url = reverse('news_sitemaps_sitemap', kwargs={'section': section})
         sites.append('%s://%s%s' % (protocol, current_site.domain, sitemap_url))
         if pages > 1:
-            for page in range(2, pages+1):
+            for page in range(2, pages + 1):
                 sites.append('%s://%s%s?p=%s' % (protocol, current_site.domain, sitemap_url, page))
     xml = loader.render_to_string('sitemaps/index.xml', {'sitemaps': sites})
     return HttpResponse(xml, content_type='application/xml')
@@ -58,14 +58,9 @@ def news_sitemap(request, sitemaps, section=None):
         except PageNotAnInteger:
             raise Http404('No page "%s"' % page)
 
-    render_kwargs = {}
-    if django.VERSION < (1, 5):
-        render_kwargs['mimetype'] = 'application/xml'
-    else:
-        render_kwargs['content_type'] = 'application/xml'
-    return render_to_response('sitemaps/news_sitemap.xml', {
+    return render(request, 'sitemaps/news_sitemap.xml', {
         'urlset': urls,
         'publication_name': NAME,
         'publication_lang': LANG,
         'publication_tz': TZ
-    }, **render_kwargs)
+    }, content_type='application/xml')
