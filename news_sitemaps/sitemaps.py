@@ -1,7 +1,7 @@
 import datetime
 from django.contrib.sitemaps import Sitemap
 
-from django.utils.six.moves.urllib.parse import urljoin
+from six.moves.urllib.parse import urljoin
 
 
 class NewsSitemap(Sitemap):
